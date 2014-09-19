@@ -1,0 +1,78 @@
+#! /bin/bash
+# Program: CSCI330 Assignment 6
+# Programmer: Taylor Douthitt
+# Z-ID: 1579803
+# Date Due: 4-19-11 
+
+# "Write a shell script to create, view and modify 
+# a simple database that contains automobile records.
+# The shell script has to be done in Bourne shell syntax
+# (bash as a matter of fact). You may use all features of
+# bash and any Unix command (in the version that is available
+# on your personal Ubuntu system or turing and hopper)."
+ 
+# command line argument - $1: database to be queried
+#						  $2: command to be executed
+#						  $3+: following parameters are specific to command issued
+
+
+if [ $2 == 'create' ]; then #if command create
+
+	if [ -s $1 ]; then #if database already exists
+		echo "Database already exists!!"
+	else
+		echo $3 >> $1
+		echo "New database created"	
+	fi
+fi
+
+if [ $2 == 'add' ]; then #if command add
+	
+	if [ "$3" == "" ]; then
+		read -p "Please enter Make: " $3
+	fi
+	if [ "$4" == "" ]; then
+		read -p "Please enter Model: " $4
+	fi
+	if [ "$5" == "" ]; then
+		read -p "Please enter Year ( 1870 - 2020 ): " $5
+	fi
+	if [ "$6" == "" ]; then
+		read -p "Please enter Color: " $6
+	fi
+	
+	echo $3"," $4"," $5"," $6 >> $1
+	echo "Successfully added a record to the database"
+fi
+
+if [ $2 == 'view' ]; then
+
+	if [ $3 == 'all' ]; then
+		awk '{print}' $1 
+	fi
+	if [ $3 == 'single' ]; then
+		awk "NR==$4{print}" $1
+	fi
+	if [ $3 == 'range' ]; then
+		awk "(NR >= $4+1) && (NR <= $5+1) {print}" $1
+	fi
+
+fi
+lineNum="$4"
+lineNum+=1
+if [ $2 == 'delete' ]; then
+
+	if [ $3 == 'all' ]; then
+		sed  'd' $1	
+	fi
+	if [ $3 == 'single' ]; then
+		sed -i -e '3;3d' DB
+
+		echo "1 record deleted"
+
+	fi
+	if [ $3 == 'range' ]; then
+		sed  'd' $1
+	fi		
+
+fi

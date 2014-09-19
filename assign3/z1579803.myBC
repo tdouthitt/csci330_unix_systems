@@ -1,0 +1,4 @@
+#! /bin/bash
+# Usage: bc calc output
+
+echo "$1" | bc

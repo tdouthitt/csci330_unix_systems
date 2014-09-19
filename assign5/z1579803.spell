@@ -1,0 +1,58 @@
+#!/bin/bash
+# Program: CSCI330 Assignment 5
+# Programmer: Taylor Douthitt
+# Z-ID: 1579803
+# Date: 4-5-11 
+# Word Correction Program utilizing 'ispell -l' command
+# command line argument - $1 - testfile - file to be checked for correct spelling
+
+# store output of ispell -l on file $1 into file wrongwords
+cat $1 | ispell -l > wrongwords
+
+# "read" file into array for misspelled words
+wrongAR=($(< wrongwords))
+
+# delete temporary file
+rm wrongwords
+
+# read in .niuspelled for use in comparison
+saved=($(< .niuspelled))
+
+# initialize variable for user input
+correction=""
+
+# loop through array of mispelled words and add corrections or insists
+for((i=0; i<${#wrongAR[@]}; i++)) 
+	do
+		
+		# if word not in .niuspelled
+		if [[  ${wrongAR[i]} != ${saved[0]} && ${wrongAR[i]} != ${saved[1]} ]]
+		then 
+			# prompt run for misspelled word and user input
+			echo "'${wrongAR[i]} ' is mispelled. Press "Enter" to keep"
+			read -p "this spelling, or type a correction here: " correction
+		
+		
+			# if user didn't hit "enter"
+			if [[ ! $correction = "" ]]; then
+				# array to hold corrected words
+				correctAR[i]=$correction
+			# if user did hit "enter"
+			else
+			# store word as remembered in .niuspelled file
+				echo ${wrongAR[i]} >> .niuspelled
+			fi
+		
+		fi
+		
+	done 
+# print out list header	
+echo   "MISPELLED:             CORRECTIONS:"
+ 
+# loop through array and print mispelled words on left
+# and corrections on the right
+for ((i=0; i<${#correctAR[@]}; i++))
+	do
+		echo "${wrongAR[i]}    	       ${correctAR[i]}"
+	done
+

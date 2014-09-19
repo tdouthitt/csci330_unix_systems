@@ -1,0 +1,26 @@
+#! bin/bash
+# CSCI 330 Assignment 7
+# Taylor Douthitt
+# DUE: 4-26-11
+# Program Function:"print report using awk and sample inputfile
+# prints list of sales per mont and station(X or Y)
+# also lists sum of revenues for 2010 and how many files processed"
+
+
+BEGIN {
+   print "Data for year 2010"
+   print "=================="
+   count=0
+   sum=0
+}
+
+/2010/{
+   print $2, ":", $4, " ", $3
+   count++
+   sum+=$4   
+}
+END{
+   print "=================="
+   print "volume for 2010 is: ", sum
+   print count, " records processed"
+}
